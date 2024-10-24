@@ -1,0 +1,26 @@
+.navbar {
+    background-color: #333;  /* Dark background for the navbar */
+    color: white;  /* White text color */
+    padding: 15px 20px;  /* Increased vertical padding for more height */
+}
+
+.navbar ul {
+    list-style: none;  /* Remove default list styling */
+    display: flex;  /* Use flexbox for horizontal layout */
+    gap: 15px;  /* Space between the items */
+    justify-content: center;  /* Center items horizontally */
+    padding: 0;  /* Remove default padding */
+    margin: 0;  /* Remove default margin */
+}
+
+.navbar a {
+    color: white;  /* White link color */
+    text-decoration: none;  /* Remove underline */
+    padding: 5px 10px;  /* Padding for clickable area */
+    transition: background-color 0.3s;  /* Smooth transition for hover effect */
+}
+
+.navbar a:hover {
+    background-color: rgba(255, 255, 255, 0.2);  /* Light background on hover */
+    border-radius: 5px;  /* Rounded corners */
+}

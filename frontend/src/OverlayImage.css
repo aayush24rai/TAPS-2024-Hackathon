@@ -1,0 +1,77 @@
+/* OverlayImage.css */
+body {
+    margin: 0; /* Remove default margin */
+    background-image: url('./images/grass.jpg'); /* Path to your grass image */
+    background-size: cover; /* Cover the entire screen */
+    background-repeat: no-repeat; /* Prevent repeating */
+    background-position: center; /* Center the image */
+  }
+  
+  .main-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Full height of the viewport */
+    position: relative; /* Ensure it positions relative to the container */
+  }
+  
+  .title {
+    font-size: 3rem; /* Adjust size as needed */
+    font-weight: bold; /* Makes the font bold */
+    color: white; /* Sets the text color to white */
+    text-align: center; /* Centers the text */
+    margin-bottom: 20px; /* Adds space below the title */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Optional: Adds a shadow for better visibility */
+  }
+  
+  
+  .image-container {
+    position: relative;
+    width: 590px; /* Fixed width for the image */
+    height: 748px; /* Fixed height for the image */
+  }
+  
+  .overlay-image {
+    width: 100%;  /* Set the image width to 100% of its container */
+    height: 100%; /* Set the image height to 100% of its container */
+    object-fit: cover; /* Ensures the image covers the entire area */
+  }
+  
+  .button-grid {
+    position: absolute;
+    top: 18px;    /* 18px padding from the top */
+    left: 10px;   /* 10px padding from the left */
+    right: 16px;  /* 16px padding from the right */
+    bottom: 18px; /* 18px padding from the bottom */
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);  /* 6 equal columns */
+    grid-template-rows: repeat(23, 31px);    /* 23 rows with height of 31px */
+    gap: 0;  /* No gap between the buttons */
+  }
+  
+  .grid-button {
+    background-color: transparent;  /* Initially clear */
+    border: 1px solid rgba(255, 255, 255, 0.5);  /* Small semi-transparent white border */
+    position: relative;  /* Required for positioning the number box */
+    cursor: pointer;
+    transition: all 0.3s ease;  /* Smooth transition for hover effect */
+  }
+  
+  .grid-button:hover {
+    background-color: rgba(27, 126, 38, 0.7);  /* Button color on hover */
+    border: 1px solid rgba(0, 123, 255, 0.7);  /* Change border color on hover */
+  }
+  
+  .number-box {
+    position: absolute;  /* Position it absolutely within the button */
+    top: 50%;           /* Center vertically */
+    left: 50%;          /* Center horizontally */
+    transform: translate(-50%, -50%); /* Adjust position to truly center */
+    background-color: white; /* White background for the number box */
+    color: black;      /* Black text color for visibility */
+    padding: 4px;     /* Small padding around the number */
+    border-radius: 4px; /* Rounded corners for the number box */
+    font-size: 14px;  /* Adjust font size as necessary */
+  }
+  
