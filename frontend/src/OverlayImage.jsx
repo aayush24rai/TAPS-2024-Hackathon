@@ -1,11 +1,14 @@
 // OverlayImage.js
 import React from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate, useLocation } from 'react-router-dom'; // Import useNavigate
 import './OverlayImage.css'; // Ensure this path is correct based on your project structure
 import map from './images/map.jpg'; // Import your image file correctly
 
 const OverlayImage = () => {
   const navigate = useNavigate(); // Initialize useNavigate
+  const location = useLocation();
+  const email = location.state.email;
+
   const numbers = [
     24, 13, 1, 2, 34, 35, 23, 17, 26, 28, 30, 24, 19, 15, 8, 5,
     7, 12, 10, 11, 21, 11, 20, 26, 4, 30, 5, 25, 33, 27, 9, 27,
