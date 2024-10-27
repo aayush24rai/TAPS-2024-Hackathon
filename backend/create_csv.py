@@ -1,4 +1,5 @@
 import csv
+import os
 
 """
 base dictionary with farm_id as key
@@ -9,149 +10,163 @@ dic = {
             "irrigation_inches": [],
             "dates": ['10/24/2024']
         },
-        "plot_id": "",  # Plot ID
-        "latitude": 0.0,  # Latitude (floating point)
-        "longitude": 0.0,  # Longitude (floating point)
-        "sample_id": 0,  # Sample ID
-        "soil_ph": 0.0,  # Soil pH
-        "excess_lime": "",  # Excess Lime (string or can be boolean depending on data type)
-        "organic_matter_percent": 0.0,  # Organic matter (%)
-        "nitrate_nitrogen_ppm": 0.0,  # Nitrate-Nitrogen (ppm)
-        "nitrate_nitrogen_lbs_per_acre": 0.0,  # Nitrate-Nitrogen (lbs of N/acre)
-        "phosphorus_ppm": 0.0,  # Phosphorus (ppm)
-        "potassium_ppm": 0.0,  # Potassium (ppm)
-        "sulfur_ppm": 0.0,  # Sulfur (ppm)
-        "sulfur_lbs_per_acre": 0.0,  # Sulfur (lbs of S/acre)
-        "calcium_ppm": 0.0,  # Calcium (ppm)
-        "magnesium_ppm": 0.0,  # Magnesium (ppm)
-        "sodium_ppm": 0.0,  # Sodium (ppm)
-        "zinc_ppm": 0.0,  # Zinc (ppm)
-        "iron_ppm": 0.0,  # Iron (ppm)
-        "manganese_ppm": 0.0,  # Manganese (ppm)
-        "copper_ppm": 0.0,  # Copper (ppm)
-        "boron_ppm": 0.0,  # Boron (ppm)
-        "cec_meq_per_100g": 0.0,  # Cation Exchange Capacity (CEC) (meq per 100g)
-        "cec_k_percent": 0.0,  # CEC K (%)
-        "cec_ca_percent": 0.0,  # CEC Ca (%)
-        "cec_mg_percent": 0.0,  # CEC Mg (%)
-        "cec_na_percent": 0.0  # CEC Na (%),
-        "sample": {
-            0 : {
-                "avg_ph": 0.0    # average pG,
-                "pH1": 0.0    # first pH,
-                "pH2": 0.0   # second pH,
-                "altitude": 900.0   # altitude of plot,
-                "speed": 3.0   # speed of plot??
-            } # sample number
-        }  # array of samples
+        "plot_id": [""],  # Plot ID
+        "soil_info": [
+            {
+                "depth": "", # depth in inches
+                "OMC": "", 
+                "soil_texture_class": ""
+            }
+        ],
+        "soil_ph": "",
+        "weather": {
+            "percipitation": "",
+            "humidity": "",
+            "fahrenheit" : "",
+        }
     }
 }
 """
 dic = {
     "24": {
-        "plot_id": ["2701", "2606", "1202", "804"]
+        "plot_id": ["2701", "2606", "1202", "804"],
+        "soil_info": []
     },
     "13": {
-        "plot_id": ["2702", "1704", "1201", "405"]
+        "plot_id": ["2702", "1704", "1201", "405"],
+        "soil_info": []
     },
     "1": {
-        "plot_id": ["2703", "2005", "1204", "201"]
+        "plot_id": ["2703", "2005", "1204", "201"],
+        "soil_info": []
     },
     "2": {
-        "plot_id": ["2704", "1903", "602", "205"]
+        "plot_id": ["2704", "1903", "602", "205"],
+        "soil_info": []
     },
     "34": {
-        "plot_id": ["2705", "1603", "902", "504"]
+        "plot_id": ["2705", "1603", "902", "504"],
+        "soil_info": []
     },
     "35": {
-        "plot_id": ["2706", "1702"]
+        "plot_id": ["2706", "1702"],
+        "soil_info": []
     },
     "23": {
-        "plot_id": ["2601", "1904", "1306", "603"]
+        "plot_id": ["2601", "1904", "1306", "603"],
+        "soil_info": []
     },
     "17": {
-        "plot_id": ["2602", "2205", "606", "503"]
+        "plot_id": ["2602", "2205", "606", "503"],
+        "soil_info": []
     },
     "26": {
-        "plot_id": ["2603", "2406", "605", "202"]
+        "plot_id": ["2603", "2406", "605", "202"],
+        "soil_info": []
     },
     "28": {
-        "plot_id": ["2604", "2003", "1302", "406"]
+        "plot_id": ["2604", "2003", "1302", "406"],
+        "soil_info": []
     },
     "30": {
-        "plot_id": ["2605", "2302", "1301", "206"]
+        "plot_id": ["2605", "2302", "1301", "206"],
+        "soil_info": []
     },
     "19": {
-        "plot_id": ["2501", "1906", "502", "305"]
+        "plot_id": ["2501", "1906", "502", "305"],
+        "soil_info": []
     },
     "15": {
-        "plot_id": ["2502", "2206", "903", "404"]
+        "plot_id": ["2502", "2206", "903", "404"],
+        "soil_info": []
     },
     "8": {
-        "plot_id": ["2503", "1804", "601", "506"]
+        "plot_id": ["2503", "1804", "601", "506"],
+        "soil_info": []
     },
     "5": {
-        "plot_id": ["2504", "2303", "505", "301"]
+        "plot_id": ["2504", "2303", "505", "301"],
+        "soil_info": []
     },
     "7": {
-        "plot_id": ["2505", "1803", "1006", "901"]
+        "plot_id": ["2505", "1803", "1006", "901"],
+        "soil_info": []
     },
     "12": {
-        "plot_id": ["2506", "2203", "805", "402"]
+        "plot_id": ["2506", "2203", "805", "402"],
+        "soil_info": []
     },
     "10": {
-        "plot_id": ["2401", "1706", "604", "303"]
+        "plot_id": ["2401", "1706", "604", "303"],
+        "soil_info": []
     },
     "11": {
-        "plot_id": ["2402", "2404", "906", "801"]
+        "plot_id": ["2402", "2404", "906", "801"],
+        "soil_info": []
     },
     "21": {
-        "plot_id": ["2403", "1705", "1001", "306"]
+        "plot_id": ["2403", "1705", "1001", "306"],
+        "soil_info": []
     },
     "20": {
-        "plot_id": ["2405", "1501", "806", "302"]
+        "plot_id": ["2405", "1501", "806", "302"],
+        "soil_info": []
     },
     "4": {
-        "plot_id": ["2301", "1806", "1102", "304"]
+        "plot_id": ["2301", "1806", "1102", "304"],
+        "soil_info": []
     },
     "25": {
-        "plot_id": ["2304", "1801", "1106", "403"]
+        "plot_id": ["2304", "1801", "1106", "403"],
+        "soil_info": []
     },
     "33": {
-        "plot_id": ["2305", "1703", "1504", "1002"]
+        "plot_id": ["2305", "1703", "1504", "1002"],
+        "soil_info": []
     },
     "27": {
-        "plot_id": ["2306", "2202", "1303", "204"]
+        "plot_id": ["2306", "2202", "1303", "204"],
+        "soil_info": []
     },
     "9": {
-        "plot_id": ["2201", "1503", "1506", "1104"]
+        "plot_id": ["2201", "1503", "1506", "1104"],
+        "soil_info": []
     },
     "16": {
-        "plot_id": ["2204", "2002", "1105", "1003"]
+        "plot_id": ["2204", "2002", "1105", "1003"],
+        "soil_info": []
     },
     "6": {
-        "plot_id": ["2001", "1606", "905", "802"]
+        "plot_id": ["2001", "1606", "905", "802"],
+        "soil_info": []
     },
     "3": {
-        "plot_id": ["2004", "1502", "1005", "501"]
+        "plot_id": ["2004", "1502", "1005", "501"],
+        "soil_info": []
     },
     "29": {
-        "plot_id": ["2006", "1902", "1205", "1103"]
+        "plot_id": ["2006", "1902", "1205", "1103"],
+        "soil_info": []
     },
     "22": {
-        "plot_id": ["1901", "1604", "1305", "1203"]
+        "plot_id": ["1901", "1604", "1305", "1203"],
+        "soil_info": []
     },
     "31": {
-        "plot_id": ["1905", "1601", "1004", "803"]
+        "plot_id": ["1905", "1601", "1004", "803"],
+        "soil_info": []
     },
     "18": {
-        "plot_id": ["1802", "1805", "1206", "1101"]
+        "plot_id": ["1802", "1805", "1206", "1101"],
+        "soil_info": []
     },
     "14": {
-        "plot_id": ["1701", "1605", "1304", "203"]
+        "plot_id": ["1701", "1605", "1304", "203"],
+        "soil_info": []
     },
     "32": {
-        "plot_id": ["1602", "1505", "904", "401"]
+        "plot_id": ["1602", "1505", "904", "401"],
+        "soil_info": []
     }
 }
 
@@ -189,62 +204,12 @@ def shallow_soil_sampling_data(filepath):
         if add_plot_id:
             return {
                 "plot_id": row[1],
-                "latitude": row[2],
-                "longitude": row[3],
-                "sample_id": row[4],
                 "soil_ph": row[5],
-                "excess_lime": row[6],
-                "organic_matter_percent": row[7],
-                "nitrate_nitrogen_ppm": row[8],
-                "nitrate_nitrogen_lbs_per_acre": row[9],
-                "phosphorus_ppm": row[10],
-                "potassium_ppm": row[11],
-                "sulfur_ppm": row[12],
-                "sulfur_lbs_per_acre": row[13],
-                "calcium_ppm": row[14],
-                "magnesium_ppm": row[15],
-                "sodium_ppm": row[16],
-                "zinc_ppm": row[17],
-                "iron_ppm": row[18],
-                "manganese_ppm": row[19],
-                "copper_ppm": row[20],
-                "boron_ppm": row[21],
-                "cec_meq_per_100g": row[22],
-                "cec_k_percent": row[23],
-                "cec_ca_percent": row[24],
-                "cec_mg_percent": row[25],
-                "cec_na_percent": row[26]
             }
         else:
             return {
-                "latitude": row[2],
-                "longitude": row[3],
-                "sample_id": row[4],
                 "soil_ph": row[5],
-                "excess_lime": row[6],
-                "organic_matter_percent": row[7],
-                "nitrate_nitrogen_ppm": row[8],
-                "nitrate_nitrogen_lbs_per_acre": row[9],
-                "phosphorus_ppm": row[10],
-                "potassium_ppm": row[11],
-                "sulfur_ppm": row[12],
-                "sulfur_lbs_per_acre": row[13],
-                "calcium_ppm": row[14],
-                "magnesium_ppm": row[15],
-                "sodium_ppm": row[16],
-                "zinc_ppm": row[17],
-                "iron_ppm": row[18],
-                "manganese_ppm": row[19],
-                "copper_ppm": row[20],
-                "boron_ppm": row[21],
-                "cec_meq_per_100g": row[22],
-                "cec_k_percent": row[23],
-                "cec_ca_percent": row[24],
-                "cec_mg_percent": row[25],
-                "cec_na_percent": row[26]
             }
-        
-
     try:
         with open(filepath, mode='r') as file:
             csvFile = csv.reader(file)
@@ -258,33 +223,42 @@ def shallow_soil_sampling_data(filepath):
                     else:
                         print("DIDNT FIND: ", row[0])
                         # Create a new entry if not seen
-                        dic[row[0]] = create_entry(row, True)
-                    
-            
+                        dic[row[0]] = create_entry(row, True)      
     except Exception as e:
         print(str(e))
 
-
-# this class is finding no matches?? maybe this data is just relative for the field??
-def raw_spatial_data(filepath):
+def arable_data(team_number, filepath):
     with open(filepath, mode='r') as file:
             csvFile = csv.reader(file)
+            dic[team_number][""]
             for i, row in enumerate(csvFile):
-                if i == 0:
-                    print("skippting this: ", row[0])
+                if i == 0 or i == 1:
+                    print("skipping these: ", row[0])
                     continue
                 
-                for key, value in dic.items():
-                    if "sample" not in dic[key]:
-                        dic[key]["sample"] = {}
-                    if value["longitude"] == row[0] and value["latitude"] == row[1]:
-                        dic[key]["sample"][row[7]] = {
-                            "avg_ph": row[2],   
-                            "pH1": row[3],
-                            "pH2": row[4], 
-                            "altitude": row[5], 
-                            "speed": row[6],
-                        }  
+                dic[team_number][0]
+
+def soil_texture_data(filepath):
+    with open(filepath, mode='r') as file:
+        csvFile = csv.reader(file)
+        for i, row in enumerate(csvFile):
+            if i == 0 or i == 1:
+                continue
+                
+            for key, value in dic.items():
+                if row[0] in value["plot_id"]:
+                    dic[key]["soil_info"].append({
+                        "depth": row[5],
+                        "OMC": row[6],
+                        "soil_texture_class": row[7]
+                    })
+
+def write_to_csv():
+    # change to your local url
+    file_path = os.path.join(r"C:\Users\kevin\OneDrive\Desktop\Projects\taps-project\backend", "plots_data.csv")
+
+    with open(file_path, mode="w", newline='') as file:
+        fieldnames = ["farm_id", "plot_ids", ""]
 
 def main():
     # create farm_id to irrigation
@@ -296,11 +270,14 @@ def main():
     # this class is finding no matches?? maybe this data is just relative for the field??
     # raw_spatial_data(r"C:\Users\kevin\Downloads\2024_TAPS_Veris_raw_spatial_data(pH).csv")
 
+    # create soil texture data
+    soil_texture_data(r"C:\Users\kevin\Downloads\24 KSU TAPS Soil texture(data).csv")
+
     try:
-        for key in dic:
-            print(key, ": ", dic[key]["sample"])
+        for key, value in dic.items():
+            print(key, ": ", value)
             print("\n")
     except Exception as e:
         print(str(e))
-
-main()
+    
+    return dic

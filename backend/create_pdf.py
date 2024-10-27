@@ -6,7 +6,7 @@ from email.mime.application import MIMEApplication
 
 pdf = FPDF()
 
-def create_pdf(email, optimized_irrigation, plot_number, dollar_cost, other_variables=None):
+def create_pdf(email, optimized_irrigation, plot_number, dollar_cost, week_weather):
     pdf_directory = os.getcwd()
     pdf.add_page()
 
@@ -50,13 +50,8 @@ def create_pdf(email, optimized_irrigation, plot_number, dollar_cost, other_vari
 
     pdf.ln(5)
     pdf.cell(0, 10, "The weather conditions are:", ln=True)
-    pdf.cell(0, 10, "- Day 1: 75 degrees, 20% change of rain, 2mm rain", ln=True)
-    pdf.cell(0, 10, "- Day 2: 75 degrees, 20% change of rain, 2mm rain", ln=True)
-    pdf.cell(0, 10, "- Day 3: 75 degrees, 20% change of rain, 2mm rain", ln=True)
-    pdf.cell(0, 10, "- Day 4: 75 degrees, 20% change of rain, 2mm rain", ln=True)
-    pdf.cell(0, 10, "- Day 5: 75 degrees, 20% change of rain, 2mm rain", ln=True)
-    pdf.cell(0, 10, "- Day 6: 75 degrees, 20% change of rain, 2mm rain", ln=True)
-    pdf.cell(0, 10, "- Day 7: 75 degrees, 20% change of rain, 2mm rain", ln=True)
+    for i, day in enumerate(week_weather):
+        pdf.cell(0, 10, f"- Day {i+1}: High - {day["max_temp_f"]}f, Low - {day["min_temp_f"]}f, Total Rain (mm) - {day["total_precip_mm"]}, Humidity - {day["avg_humidity"]}", ln=True)
 
     pdf.set_font("Arial", "B", 14)
     pdf.set_text_color(0, 0, 0)
