@@ -182,16 +182,17 @@ def farm_id_to_irrigation(filepath):
 
                 if i == 1:
                     dates = row[1:]
+
                 else:
                     if row[0] in dic:
                         dic[row[0]]["irrigation"] = {
-                            "irrigation_inches": row[1:],
+                            "irrigation_inches": row[1:-1],
                             "dates": dates
                         }
                     else:
                         dic[row[0]] = {
                             "irrigation": {
-                                "irrigation_inches": row[1:],
+                                "irrigation_inches": row[1:-1],
                                 "dates": dates
                             }
                         }
@@ -275,8 +276,9 @@ def main():
 
     try:
         for key, value in dic.items():
-            print(key, ": ", value)
-            print("\n")
+            if key == "1":
+                print(key, ": ", value)
+                print("\n")
     except Exception as e:
         print(str(e))
     
