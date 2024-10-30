@@ -276,9 +276,8 @@ def main():
 
     try:
         for key, value in dic.items():
-            if key == "1":
-                print(key, ": ", value)
-                print("\n")
+            print(key, ": ", value)
+            print("\n")
     except Exception as e:
         print(str(e))
     

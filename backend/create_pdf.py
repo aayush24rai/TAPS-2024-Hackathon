@@ -4,15 +4,14 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.application import MIMEApplication
 
-pdf = FPDF()
-
-def create_pdf(email, optimized_irrigation, plot_number, dollar_cost, week_weather):
-    pdf_directory = os.getcwd()
+def create_pdf(email, optimized_irrigation, farm_id, money_info, energy_info, week_weather):
+    print("IN PDF")
+    pdf = FPDF()
     pdf.add_page()
 
     pdf.set_font("Arial", "B", 20)      
     pdf.set_text_color(255, 0, 0)
-    pdf.cell(0, 10, f"Plot {plot_number} Irrigation Optimization Plan", align="C", ln=True)
+    pdf.cell(0, 10, f"Plot {farm_id} Irrigation Optimization Plan", align="C", ln=True)
 
     pdf.set_font("Arial", "I", 10)
     pdf.set_text_color(0, 0, 0)
@@ -51,23 +50,42 @@ def create_pdf(email, optimized_irrigation, plot_number, dollar_cost, week_weath
     pdf.ln(5)
     pdf.cell(0, 10, "The weather conditions are:", ln=True)
     for i, day in enumerate(week_weather):
-        pdf.cell(0, 10, f"- Day {i+1}: High - {day["max_temp_f"]}f, Low - {day["min_temp_f"]}f, Total Rain (mm) - {day["total_precip_mm"]}, Humidity - {day["avg_humidity"]}", ln=True)
+        pdf.multi_cell(0, 5, f"- Day {i+1}: High - {day['max_temp_f']}f, Low - {day['min_temp_f']}f, Total Rain (mm) - {day['total_precip_mm']}, Humidity - {day['avg_humidity']}, Weather - {day['text']}")
 
     pdf.set_font("Arial", "B", 14)
     pdf.set_text_color(0, 0, 0)
     pdf.ln(5)
-    pdf.cell(20, 10, "Cost Breakdown: ")
+    pdf.cell(20, 10, "Cost and Energy Benefits: ")
 
     pdf.set_font("Arial", "", 12)
     pdf.set_text_color(0, 0, 0)
     pdf.ln(10)
-    pdf.cell(0, 10, f"The cost of irrigation this week is ${dollar_cost} based on the gallon price in Colby, Kansas at $1.05")
+    pdf.multi_cell(0, 5, f"This optimization plan will save you ${money_info['plot_money_saved']}. The previous amount of gallons used is {money_info['plot_irrigation_given_gallons']}, this approach asks for {money_info['plot_irrigation_optimized_gallons']} gallons of water")
 
-    pdf.output(os.path.join(pdf_directory, "Irrigation-Optimization.pdf"))
-    thread = threading.Thread(target=send_email, args=(email, pdf_directory))
-    thread.start()
+    pdf.set_font("Arial", "", 12)
+    pdf.set_text_color(0, 0, 0)
+    pdf.ln(10)
+    pdf.multi_cell(0, 5, f"This optimization plan will save the average Kansas farmer ${money_info['converted_money_saved']}. The previous amount of gallons used is {money_info['converted_irrigation_given_gallons']}, this approach asks for {money_info['converted_irrigation_optimized_gallons']} gallons of water")
 
-    return pdf_directory
+    pdf.set_font("Arial", "", 12)
+    pdf.set_text_color(0, 0, 0)
+    pdf.ln(10)
+    pdf.cell(0, 10, f"This optimization plan will save you {energy_info['plot_optimized_energy']} killowat-hours in energy")
+
+    pdf.set_font("Arial", "", 12)
+    pdf.set_text_color(0, 0, 0)
+    pdf.ln(10)
+    pdf.cell(0, 10, f"This optimization plan will save the average Kansas farmer {energy_info['converted_optimized_energy']} killowat-hours in energy")
+
+    # Specify the full path to the PDF file
+    pdf_file_path = os.path.join(os.getcwd(), "Irrigation-Optimization.pdf")
+
+    # Save the PDF to the specified path
+    pdf.output(pdf_file_path)
+
+    send_email(email, pdf_file_path)
+    print("CREATED PDF: ", pdf_file_path)
+    return pdf_file_path
 
 def send_email(recipient, pdf_directory):
     try:
