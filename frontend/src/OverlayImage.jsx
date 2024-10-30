@@ -3,7 +3,6 @@ import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom'; // Import useNavigate
 import './OverlayImage.css'; // Ensure this path is correct based on your project structure
 import map from './images/map.jpg'; // Import your image file correctly
-
 const OverlayImage = () => {
   const navigate = useNavigate(); // Initialize useNavigate
   const location = useLocation();
@@ -24,7 +23,11 @@ const OverlayImage = () => {
   const handleButtonClick = (number) => {
     console.log(`Button ${number} clicked`);
     // Navigate to the button page (replace '/button-page' with your actual route)
-    navigate(`/button/${number}`); // Adjust the path as necessary
+    navigate(`/button/${number}`, {
+      state: {
+        "email": email
+      }
+    }); 
   };
 
   return (
