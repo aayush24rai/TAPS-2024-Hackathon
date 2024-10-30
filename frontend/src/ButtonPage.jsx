@@ -15,9 +15,6 @@ const ButtonPage = () => {
     "Because every drop counts (we actually counted them) 📊",
     "Optimizing your agriculture, one drop at a time! 💧",
     "Because your crops deserve better than guesswork 🌱",
-    "Turning water waste into water wisdom 🚰",
-    "Taking the 'irritating' out of irrigation 😉",
-    "Helping Mother Nature work smarter 🌍",
   ];
   const typingSpeed = 150;
   const deletingSpeed = 100;
@@ -29,8 +26,8 @@ const ButtonPage = () => {
   useEffect(() => {
     if (isLoading) {
       const currentWord = agriculturePhrases[currentWordIndex];
-      const isEndOfWord = displayedText === currentWord;
-      const isStartOfWord = displayedText === '';
+      const isEndOfWord = displayedText == currentWord;
+      const isStartOfWord = displayedText == '';
   
       let timeout;
   
@@ -117,6 +114,7 @@ const ButtonPage = () => {
       </div>
     )
   }
+
   return (
     <div className='optimize-container'>
       <div className='data-container'>
@@ -138,6 +136,13 @@ const ButtonPage = () => {
             <h3 className='pop-h3'>Energy</h3>
             <h1 className='pop-h'>{weatherData.energy_info.plot_optimized_energy} kw/h saved</h1>
             <h1 className='pop-h'>{calculateGallonsSaved()} gallons saved</h1>
+          </div>
+          <div className='popup'>
+            <h3 className='pop-h3'>Weather</h3>
+            <h3 className='pop-h'>Avg Temp: {weatherData.avg_temp} f</h3>
+            <h3 className='pop-h'>Max Temp: {weatherData.max_temp} f</h3>
+            <h3 className='pop-h'>Min Temp: {weatherData.min_temp} f</h3>
+            <h3 className='pop-h'>Avg Humidity: {weatherData.avg_humidity} f</h3>
           </div>
         </div>
       </div>
