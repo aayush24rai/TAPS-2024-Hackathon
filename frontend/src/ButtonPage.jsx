@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useLocation } from 'react-router-dom';
+import { Bar } from 'react-chartjs-2';
 import './ButtonPage.css';
 
 const ButtonPage = () => {
@@ -16,6 +17,7 @@ const ButtonPage = () => {
     "Optimizing your agriculture, one drop at a time! 💧",
     "Because your crops deserve better than guesswork 🌱",
   ];
+  const [showChart, setShowChart] = useState(false);
   const typingSpeed = 150;
   const deletingSpeed = 100;
   const pauseBetweenWords = 75;
@@ -95,6 +97,30 @@ const ButtonPage = () => {
       return Math.round(saved * 100) / 100;
   }
 
+  const handleChartClick = () => {
+    setShowChart(!showChart);
+  };
+
+  const chartData = {
+    labels: ['Given Irrigation', 'Optimal Irrigation'],
+    datasets: [
+      {
+        label: 'Irrigation (mm)',
+        data: [weatherData?.given_irrigation, weatherData?.optimal_irrigation],
+        backgroundColor: ['rgba(75, 192, 192, 0.6)', 'rgba(153, 102, 255, 0.6)'],
+      },
+    ],
+  };
+
+  const chartOptions = {
+    responsive: true,
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
+  };
+
 
   const calculateGallonsSaved = () => {
       if (weatherData.money_info.plot_irrigation_optimized_gallons == 0) {
@@ -122,7 +148,7 @@ const ButtonPage = () => {
           <h1 className='h'>Week: {selectedWeek}</h1>
         </div>
         <div className='pop-divs'>
-          <div className='popup'>
+          <div className='popup' onClick={handleChartClick}>
             <h3 className='pop-h3'>Optimized Irrigation</h3>
             <h1 className='pop-h'>{weatherData.optimal_irrigation}mm</h1>
             <h1 className='pop-h'>{calculateOptimalIrrigationPercentage()}% optimization</h1>
@@ -145,6 +171,11 @@ const ButtonPage = () => {
             <h3 className='pop-h'>Avg Humidity: {weatherData.avg_humidity} f</h3>
           </div>
         </div>
+        {showChart && (
+          <div className="chart-container">
+            <Bar data={chartData} options={chartOptions} />
+          </div>
+        )}
       </div>
     </div>
   );
