@@ -186,6 +186,8 @@ def calculate_money_saved(irrigation_optimized_mm, irrigation_given_mm):
     
     # Prepare return values with farm-wide conversions
     return {
+        "plot_cost_given": cost_given,
+        "plot_cost_optimized": cost_optimized,
         "converted_money_saved": round(farm_size_conversion * plot_money_saved, 2),
         "plot_money_saved": round(plot_money_saved, 2),
         "converted_irrigation_given_gallons": round(farm_size_conversion * irrigation_given_gallons, 2),
@@ -208,6 +210,83 @@ def calculate_energy_saved(converted_given_gallons, converted_optimized_gallons,
 @app.route('/get/plot/info', methods=["POST"])
 @csrf.exempt
 def testing():
+    return jsonify({
+    "energy_info": {
+        "converted_optimized_energy": 1191.31,
+        "plot_optimized_energy": 1.51
+    },
+    "given_irrigation": 25.4,
+    "money_info": {
+        "converted_irrigation_given_gallons": 882453.03,
+        "converted_irrigation_optimized_gallons": 803032.26,
+        "converted_money_saved": 150899.47,
+        "plot_cost_optimized": 1938.8904955244946,
+        "plot_cost_given": 2130.6488961807627,
+        "plot_irrigation_given_gallons": 1121.39,
+        "plot_irrigation_optimized_gallons": 1020.47,
+        "plot_money_saved": 191.76
+    },
+    "optimal_irrigation": 23.114,
+    "status": 200,
+    "weather_data": [
+        {
+            "avg_humidity": 27,
+            "avg_temp_f": 81,
+            "max_temp_f": 96.3,
+            "min_temp_f": 66.6,
+            "text": "Partly cloudy",
+            "total_precip_mm": 0.53
+        },
+        {
+            "avg_humidity": 25,
+            "avg_temp_f": 78.5,
+            "max_temp_f": 92.6,
+            "min_temp_f": 65.1,
+            "text": "Sunny",
+            "total_precip_mm": 0
+        },
+        {
+            "avg_humidity": 28,
+            "avg_temp_f": 79.3,
+            "max_temp_f": 91.2,
+            "min_temp_f": 68.7,
+            "text": "Sunny",
+            "total_precip_mm": 0
+        },
+        {
+            "avg_humidity": 38,
+            "avg_temp_f": 79.3,
+            "max_temp_f": 92.7,
+            "min_temp_f": 67.4,
+            "text": "Sunny",
+            "total_precip_mm": 0.01
+        },
+        {
+            "avg_humidity": 45,
+            "avg_temp_f": 74.6,
+            "max_temp_f": 86.7,
+            "min_temp_f": 61.6,
+            "text": "Sunny",
+            "total_precip_mm": 0
+        },
+        {
+            "avg_humidity": 48,
+            "avg_temp_f": 77.5,
+            "max_temp_f": 93,
+            "min_temp_f": 64.1,
+            "text": "Sunny",
+            "total_precip_mm": 1.27
+        },
+        {
+            "avg_humidity": 47,
+            "avg_temp_f": 78.5,
+            "max_temp_f": 93.9,
+            "min_temp_f": 67.4,
+            "text": "Partly cloudy",
+            "total_precip_mm": 0.04
+        }
+    ]
+    })
     try:
         print("IN TESTING")
         week_weather = get_weather("2024-09-10", "Colby,KS")
@@ -269,7 +348,7 @@ def testing():
 
             return jsonify({
                 "status": 200,
-                "optimal_irrigation": optimal_irrigation_mm,
+                "optimal_irrigation": optimal_irrigation_inches,
                 "given_irrigation": irrigation_inches,
                 "money_info": money_info,
                 "energy_info": energy_info,
