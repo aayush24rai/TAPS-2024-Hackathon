@@ -228,6 +228,10 @@ def testing():
     },
     "optimal_irrigation": 23.114,
     "status": 200,
+    "avg_temp": round(1.124, 2),
+    "max_temp": round(1.124, 2),
+    "min_temp": round(1.124, 2),
+    "avg_humidity": round(1.124, 2),
     "weather_data": [
         {
             "avg_humidity": 27,
@@ -352,7 +356,11 @@ def testing():
                 "given_irrigation": irrigation_inches,
                 "money_info": money_info,
                 "energy_info": energy_info,
-                "weather_data": week_weather
+                "weather_data": week_weather,
+                "avg_temp": round(avg_temp, 2),
+                "max_temp": round(max_temp, 2),
+                "min_temp": round(min_temp, 2),
+                "avg_humidity": round(avg_humidity, 2)
             })
         else:
             return jsonify({
