@@ -259,8 +259,8 @@ def calculate_money_saved(irrigation_optimized_mm, irrigation_given_mm):
     
     # Prepare return values with farm-wide conversions
     return {
-        "plot_cost_given": cost_given,
-        "plot_cost_optimized": cost_optimized,
+        "plot_cost_given": max(0, cost_given),
+        "plot_cost_optimized": max(0, cost_optimized),
         "converted_money_saved": round(farm_size_conversion * plot_money_saved, 2),
         "plot_money_saved": round(plot_money_saved, 2),
         "converted_irrigation_given_gallons": round(farm_size_conversion * irrigation_given_gallons, 2),
@@ -396,10 +396,8 @@ def testing():
     try:
         print("IN TESTING")
         # date: format => yyyy-MM-dd format (i.e. dt=2010-01-01)
-        date_string = date.strftime("%Y-%m-%d")
-        print("DATE STRING: ", date_string)
-        return
-        week_weather = get_weather(date_string, "Colby,KS")
+        print("DATE STRING: ", date)
+        week_weather = get_weather(date, "Colby,KS")
         avg_temp = 0
         min_temp = 0
         max_temp = 0
@@ -453,7 +451,7 @@ def testing():
 
             thread = Thread(target=create_pdf, args=(email, optimal_irrigation_inches, farm_id, money_info, energy_info, week_weather))
             thread.start()
-
+            print("RETURING")
             return jsonify({
                 "status": 200,
                 "optimal_irrigation": max(optimal_irrigation_inches, 0),
@@ -473,6 +471,7 @@ def testing():
             })
     
     except Exception as e:
+        print("ERROR: ", str(e))
         return jsonify({
             "status": 500,
             "message": str(e)
