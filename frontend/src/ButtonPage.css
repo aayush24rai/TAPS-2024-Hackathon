@@ -10,6 +10,12 @@ html, body {
     box-sizing: border-box;
 }
 
+.chart-container{
+    width: 60vw;
+    height: 60vh;
+    padding-top: 30px;
+}
+
 .loading-container {
     width: 100vw;
     height: 100vh;

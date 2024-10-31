@@ -256,23 +256,23 @@ def soil_texture_data(filepath):
 
 def write_to_csv():
     # change to your local url
-    file_path = os.path.join(r"C:\Users\kevin\OneDrive\Desktop\Projects\taps-project\backend", "plots_data.csv")
+    file_path = os.path.join(r".\backend", "plots_data.csv")
 
     with open(file_path, mode="w", newline='') as file:
         fieldnames = ["farm_id", "plot_ids", ""]
 
 def main():
     # create farm_id to irrigation
-    farm_id_to_irrigation(r"C:\Users\kevin\Downloads\2024_TAPS_management(Irrigation amounts).csv")
+    farm_id_to_irrigation(r"./2024_TAPS_management(Irrigation amounts).csv")
     
     # create shallow soil sample data
-    shallow_soil_sampling_data(r"C:\Users\kevin\Downloads\24 KSU TAPS Shallow soil sampling(Sheet1).csv")
+    shallow_soil_sampling_data(r"./24 KSU TAPS Shallow soil sampling(Sheet1).csv")
 
     # this class is finding no matches?? maybe this data is just relative for the field??
     # raw_spatial_data(r"C:\Users\kevin\Downloads\2024_TAPS_Veris_raw_spatial_data(pH).csv")
 
     # create soil texture data
-    soil_texture_data(r"C:\Users\kevin\Downloads\24 KSU TAPS Soil texture(data).csv")
+    soil_texture_data(r"./24 KSU TAPS Soil texture(data).csv")
 
     # try:
     #     for key, value in dic.items():
