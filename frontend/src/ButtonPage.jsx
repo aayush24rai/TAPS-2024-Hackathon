@@ -191,6 +191,10 @@ const ButtonPage = () => {
           max: 1.2, // Set the maximum value of y-axis to 1.2
           callback: (value) => value.toFixed(2), // Display y-axis values with two decimals
         },
+        gridLines: {
+          color: "#FFFFFF",
+          zeroLineColor: "#FFFFFF"
+        },
       }],
     },
   };
@@ -219,6 +223,10 @@ const ButtonPage = () => {
           max: 2200, // Set the maximum value of y-axis to 1.2
           callback: (value) => value.toFixed(2), // Display y-axis values with two decimals
         },
+        gridLines: {
+          color: "#FFFFFF",
+          zeroLineColor: "#FFFFFF"
+        },
       }],
     },
   };
@@ -246,8 +254,9 @@ const ButtonPage = () => {
           max: 3, // Set the maximum value of y-axis to 1.2
           callback: (value) => value.toFixed(2), // Display y-axis values with two decimals
         },
-        grid: {
-          color: 'white', 
+        gridLines: {
+          color: "#FFFFFF",
+          zeroLineColor: "#FFFFFF"
         },
       }],
     },
@@ -264,6 +273,8 @@ const ButtonPage = () => {
         pointHoverRadius: 10,
         fill: false,
         backgroundColor: 'rgba(153, 102, 255, 0.6)',
+        borderColor: "#FFFFFF", // Line color
+        pointBorderColor: "#FFFFFF", // Point border color
       },
     ],
   };
@@ -275,6 +286,14 @@ const ButtonPage = () => {
         display: true,
         text: (ctx) => 'Point Style: ' + ctx.chart.data.datasets[0].pointStyle,
       }
+    },
+    scales: {
+      yAxes: [{ // Change y to yAxes
+        gridLines: {
+          color: "#FFFFFF",
+          zeroLineColor: "#FFFFFF"
+        },
+      }]
     }
   };
 
@@ -331,6 +350,7 @@ const ButtonPage = () => {
   return (
     <div className='optimize-container'>
       <div className='toggle-container'>
+        <div className='n'></div>
         <div className="plot-info">
           <h1 className='pop-h3'>Plot {id}</h1>
         </div>

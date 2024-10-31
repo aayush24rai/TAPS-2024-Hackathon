@@ -23,7 +23,7 @@ function Login() {
     return (
         <div className='login-container'>
             <div className='email-container'>
-                <h1 className='login-header'>Login</h1>
+                <h1 className='login-header'>Email</h1>
                 <input className='email-i' placeholder='Enter your email' value={email} onChange={(event) => setEmail(event.target.value)} />
                 <div className='btn'>
                     <button className='submit-btn' onClick={navigateToDashboard}>Enter</button>

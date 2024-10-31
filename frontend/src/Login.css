@@ -24,6 +24,7 @@ body {
 }
 
 .email-i {
+    margin-top: 1vh;
     background-color: transparent;
     border: none;
     border-bottom: 2px solid white;

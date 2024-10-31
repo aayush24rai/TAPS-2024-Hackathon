@@ -32,20 +32,25 @@ const OverlayImage = () => {
 
   return (
     <div className="main-container">
-      <h1 className="title">Plot Heat Map</h1>
-      <div className="image-container">
-        {/* Use the imported map variable here */}
-        <img src={map} alt="Overlay" className="overlay-image" />
-        <div className="button-grid">
-          {numbers.map((number, index) => (
-            <button 
-              key={index} 
-              className="grid-button" 
-              onClick={() => handleButtonClick(number)}
-            >
-              <div className="number-box">{number}</div>
-            </button>
-          ))}
+      <div className='left-side'>
+        <h1 className="title">Irrigation Dashboard</h1>
+        <h3 className='h3'>Colby, Kansas</h3>
+      </div>
+      <div className='r-side'>
+        <div className="image-container">
+          {/* Use the imported map variable here */}
+          <img src={map} alt="Overlay" className="overlay-image" />
+          <div className="button-grid">
+            {numbers.map((number, index) => (
+              <button 
+                key={index} 
+                className="grid-button" 
+                onClick={() => handleButtonClick(number)}
+              >
+                <div className="number-box">{number}</div>
+              </button>
+            ))}
+          </div>
         </div>
       </div>
     </div>

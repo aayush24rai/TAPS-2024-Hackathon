@@ -11,10 +11,13 @@ html, body {
 }
 
 .chart-container{
-    margin-left: 15vw;
-    width: 60vw;
-    height: 60vh;
-    padding-top: 30px;
+    margin-left: 10vw;
+    margin-top: 2.5vh;
+    width: 70vw;
+    height: 70vh;
+    background-color: rgba(65, 65, 65, 0.308);
+    border: 1px solid rgba(255, 255, 255, 0.089);
+    border-radius: 15px;
 }
 
 .loading-container {
@@ -104,7 +107,7 @@ html, body {
 .optimize-container {
     color: white;
     background-color: black;
-    height: 100vh;
+    height: 125vh;
     width: 100vw;
     display: flex;
     flex-direction: flex;
@@ -160,6 +163,7 @@ html, body {
 }
 
 .h {
+    padding: 1rem;
     margin-left: 2vw;
 }
 
@@ -171,8 +175,13 @@ html, body {
     text-align: center;
 }
 
+.n {
+    height: 10vh;
+    background-color: rgb(28, 28, 28) !important;
+}
+
 .plot-info {
-    margin-top: 40vh !important;
+    margin-top: 30vh !important;
 }
 
 .items, .plot-info {
