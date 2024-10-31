@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { Bar } from 'react-chartjs-2';
 import { Line } from 'react-chartjs-2';
 import './ButtonPage.css';
@@ -10,6 +10,7 @@ import {Home} from 'lucide-react';
 const ButtonPage = () => {
   const { id } = useParams();  // Get the button ID from the URL
   const location = useLocation();
+  const navigate = useNavigate();
   const email = location.state.email;
   const [weatherData, setWeatherData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -86,10 +87,10 @@ const ButtonPage = () => {
     }
   }, [id]);
 
-  const handleResponse = (data) => {
+  const handleResponse = (data, call=false) => {
     console.log("DATA: ", data);
     //setIsLoading(false);
-    if (!weatherData && data.status == "200") {
+    if ((!weatherData || call) && data.status == "200") {
       setIsLoading(false);
       setWeatherData(data);
     }
@@ -293,6 +294,29 @@ const ButtonPage = () => {
     console.log("Selected Index:", index); 
   };
 
+  const optimizeWeek = () => {
+    setIsLoading(true);
+    const fd = new FormData();
+    setSelectedWeek(dates[selectedIndex]);
+    fd.append("farm_id", id);
+    fd.append("email", email);
+    fd.append("date", dates[selectedIndex]);
+    fd.append("index", selectedIndex);
+    axios.post("http://127.0.0.1:5000/get/plot/info", fd, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      }
+    })
+    .then(response => handleResponse(response.data, true))
+    .catch(error => console.log(error));
+  }
+
+  const navigateToDashboad = () => {
+    navigate("/Map", {
+      state: { "email": email}
+    });
+  }
+
   if (isLoading) {
     return (
       <div className='loading-container'>
@@ -307,6 +331,9 @@ const ButtonPage = () => {
   return (
     <div className='optimize-container'>
       <div className='toggle-container'>
+        <div className="plot-info">
+          <h1 className='pop-h3'>Plot {id}</h1>
+        </div>
         <div className='items'>
           <div className='change-date-div'>
             <label htmlFor="dateDropdown" className='select-date-h'>Select Date:</label>
@@ -326,7 +353,7 @@ const ButtonPage = () => {
             </div>
           </div>
           <div className='optimize-btn'>
-            <button className="button">
+            <button className="button" onClick={optimizeWeek}>
               ✨ Optimize
             </button>
           </div>
@@ -335,7 +362,7 @@ const ButtonPage = () => {
       
       <div className='right-side'>
         <div className='navbar'>
-          <div className="navigate">
+          <div className="navigate" onClick={navigateToDashboad}>
             <Home size={30} className="icon" strokeWidth={2} />
             <h1 className='nav'>Dashboard</h1>
           </div>
@@ -349,7 +376,7 @@ const ButtonPage = () => {
           <div className='pop-divs'>
             <div className='popup' onClick={handleIrrigationChartClick}>
               <h3 className='pop-h3'>Optimized Irrigation</h3>
-              <h1 className='pop-h'>{weatherData.optimal_irrigation}mm</h1>
+              <h1 className='pop-h'>{weatherData.optimal_irrigation} in</h1>
               <h1 className='pop-h'>{calculateOptimalIrrigationPercentage()}% optimization</h1>
             </div>
             <div className='popup' onClick={handleCostChartClick}>

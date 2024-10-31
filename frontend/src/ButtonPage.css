@@ -171,8 +171,12 @@ html, body {
     text-align: center;
 }
 
-.items {
-    margin-top: 50vh;
+.plot-info {
+    margin-top: 40vh !important;
+}
+
+.items, .plot-info {
+    margin-top: 5vh;
     background-color: rgba(65, 65, 65, 0.308);
     border: 1px solid rgba(255, 255, 255, 0.089);
     height: auto;
