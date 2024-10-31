@@ -11,8 +11,9 @@ html, body {
 }
 
 .chart-container{
-    width: 50vw;
-    height: 50vh;
+    width: 60vw;
+    height: 60vh;
+    padding-top: 30px;
 }
 
 .loading-container {
@@ -109,11 +110,12 @@ html, body {
 
 .data-container {
     margin-top: 10vh;
-    background-color: blue;
+    background-color: #333;
     width: 100vw;
     display: flex;
     flex-direction: column;
     margin-left: 10vw;
+    align-items: center;
 }
 
 .header {

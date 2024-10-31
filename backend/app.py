@@ -215,7 +215,7 @@ def testing():
         "converted_optimized_energy": 1191.31,
         "plot_optimized_energy": 1.51
     },
-    "given_irrigation": 25.4,
+    "given_irrigation": 1,
     "money_info": {
         "converted_irrigation_given_gallons": 882453.03,
         "converted_irrigation_optimized_gallons": 803032.26,
@@ -226,7 +226,7 @@ def testing():
         "plot_irrigation_optimized_gallons": 1020.47,
         "plot_money_saved": 191.76
     },
-    "optimal_irrigation": 23.114,
+    "optimal_irrigation": .91,
     "status": 200,
     "avg_temp": round(1.124, 2),
     "max_temp": round(1.124, 2),
