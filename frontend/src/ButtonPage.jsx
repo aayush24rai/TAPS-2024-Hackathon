@@ -186,7 +186,7 @@ const ButtonPage = () => {
       yAxes: [{ // Change y to yAxes
         ticks: {
           beginAtZero: true, // Ensure the y-axis starts at 0
-          min: .5, // Set the minimum value of y-axis to 0
+          min: 0, // Set the minimum value of y-axis to 0
           max: 1.2, // Set the maximum value of y-axis to 1.2
           callback: (value) => value.toFixed(2), // Display y-axis values with two decimals
         },
@@ -306,54 +306,91 @@ const ButtonPage = () => {
 
   return (
     <div className='optimize-container'>
-      <div className='data-container'>
-        <div className='header'>
-          <h1 className='h'>Week: {selectedWeek}</h1>
-        </div>
-        <div className='pop-divs'>
-          <div className='popup' onClick={handleIrrigationChartClick}>
-            <h3 className='pop-h3'>Optimized Irrigation</h3>
-            <h1 className='pop-h'>{weatherData.optimal_irrigation}mm</h1>
-            <h1 className='pop-h'>{calculateOptimalIrrigationPercentage()}% optimization</h1>
+      <div className='toggle-container'>
+        <div className='items'>
+          <div className='change-date-div'>
+            <label htmlFor="dateDropdown" className='select-date-h'>Select Date:</label>
+            <div className="select-container">
+              <select
+                id="dateDropdown"
+                value={selectedIndex}
+                onChange={handleSelectChange}
+                className="modern-select"
+              >
+                {dates.map((date, index) => (
+                  <option key={index} value={index}>
+                    {date}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
-          <div className='popup' onClick={handleIrrigationChartClick}>
-            <h3 className='pop-h3'>Cost</h3>
-            <h1 className='pop-h'>${Math.round(weatherData.money_info.plot_cost_optimized * 100) / 100}/plot</h1>
-            <h1 className='pop-h'>${calculateOptimizedPercentSavings()} saved</h1>
-          </div>
-          <div className='popup'  onClick={handleCostChartClick}>
-            <h3 className='pop-h3'>Energy</h3>
-            <h1 className='pop-h'>{weatherData.energy_info.plot_optimized_energy} kw/h saved</h1>
-            <h1 className='pop-h'>{calculateGallonsSaved()} gallons saved</h1>
-          </div>
-          <div className='popup'>
-            <h3 className='pop-h3'>Weather</h3>
-            <h3 className='pop-h'>Avg Temp: {weatherData.avg_temp} f</h3>
-            <h3 className='pop-h'>Max Temp: {weatherData.max_temp} f</h3>
-            <h3 className='pop-h'>Min Temp: {weatherData.min_temp} f</h3>
-            <h3 className='pop-h'>Avg Humidity: {weatherData.avg_humidity} f</h3>
+          <div className='optimize-btn'>
+            <button className="button">
+              ✨ Optimize
+            </button>
           </div>
         </div>
-        {showIrrigationChart && (
-          <div className="chart-container">
-            <Bar data={irrigationChartData} options={irrigationChartOptions} />
+      </div>
+      
+      <div className='right-side'>
+        <div className='navbar'>
+          <div className="navigate">
+            <Home size={30} className="icon" strokeWidth={2} />
+            <h1 className='nav'>Dashboard</h1>
           </div>
-        )}
-        {showCostChart && (
-          <div className="chart-container">
-            <Bar data={costChartData} options={costChartOptions} />
+        </div>
+        
+        <div className='data-container'>
+          <div className='header'>
+            <h1 className='h'>Week: {selectedWeek}</h1>
           </div>
-        )}
-        {showEnergyChart && (
-          <div className="chart-container">
-            <Bar data={energyChartData} options={energyChartOptions} />
+          
+          <div className='pop-divs'>
+            <div className='popup' onClick={handleIrrigationChartClick}>
+              <h3 className='pop-h3'>Optimized Irrigation</h3>
+              <h1 className='pop-h'>{weatherData.optimal_irrigation}mm</h1>
+              <h1 className='pop-h'>{calculateOptimalIrrigationPercentage()}% optimization</h1>
+            </div>
+            <div className='popup' onClick={handleCostChartClick}>
+              <h3 className='pop-h3'>Cost</h3>
+              <h1 className='pop-h'>${Math.round(weatherData.money_info.plot_cost_optimized * 100) / 100}/plot</h1>
+              <h1 className='pop-h'>${calculateOptimizedPercentSavings()} saved</h1>
+            </div>
+            <div className='popup' onClick={handleEnergyChartClick}>
+              <h3 className='pop-h3'>Energy</h3>
+              <h1 className='pop-h'>{weatherData.energy_info.plot_optimized_energy} kw/h saved</h1>
+              <h1 className='pop-h'>{calculateGallonsSaved()} gallons saved</h1>
+            </div>
+            <div className='popup' onClick={handleWeatherChartClick}>
+              <h3 className='pop-h3'>Weather</h3>
+              <h3 className='pop-h'>Avg Temp: {weatherData.avg_temp} f</h3>
+              <h3 className='pop-h'>Max Temp: {weatherData.max_temp} f</h3>
+              <h3 className='pop-h'>Min Temp: {weatherData.min_temp} f</h3>
+            </div>
           </div>
-        )}
-        {showWeatherChart && (
-          <div className="chart-container">
-            <Line data={weatherChartData} options={weatherChartOptions} />
-          </div>
-        )}
+
+          {showIrrigationChart && (
+            <div className="chart-container">
+              <Bar data={irrigationChartData} options={irrigationChartOptions} />
+            </div>
+          )}
+          {showCostChart && (
+            <div className="chart-container">
+              <Bar data={costChartData} options={costChartOptions} />
+            </div>
+          )}
+          {showEnergyChart && (
+            <div className="chart-container">
+              <Bar data={energyChartData} options={energyChartOptions} />
+            </div>
+          )}
+          {showWeatherChart && (
+            <div className="chart-container">
+              <Line data={weatherChartData} options={weatherChartOptions} />
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

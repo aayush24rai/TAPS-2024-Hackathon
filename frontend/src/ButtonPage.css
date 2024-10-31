@@ -11,6 +11,7 @@ html, body {
 }
 
 .chart-container{
+    margin-left: 15vw;
     width: 60vw;
     height: 60vh;
     padding-top: 30px;
