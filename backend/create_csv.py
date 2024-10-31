@@ -274,11 +274,11 @@ def main():
     # create soil texture data
     soil_texture_data(r"C:\Users\kevin\Downloads\24 KSU TAPS Soil texture(data).csv")
 
-    try:
-        for key, value in dic.items():
-            print(key, ": ", value)
-            print("\n")
-    except Exception as e:
-        print(str(e))
+    # try:
+    #     for key, value in dic.items():
+    #         print(key, ": ", value)
+    #         print("\n")
+    # except Exception as e:
+    #     print(str(e))
     
     return dic

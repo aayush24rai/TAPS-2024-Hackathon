@@ -73,11 +73,41 @@ def get_weather(start_date, city):
 
         else:
             print(f"Error: {response.status_code} - {response.text}")
-            return 500
+            return [] 
     
-    # for i, day in enumerate(week_weather):
-    #     print(f"DAY {i}: ", day)
-    #     print("\n")
+    for i, day in enumerate(week_weather):
+        print(f"DAY {i}: ", day)
+        print("\n")
+    
+    return week_weather
+
+def get_future_weather(city):
+    week_weather = []
+    for i in range(7):
+        url = f"http://api.weatherapi.com/v1/forecast.json?key={weather_key}&q={city}&days=7"
+        response = requests.get(url)
+
+        if response.status_code == 200:
+            weather_data = response.json()
+            day = weather_data["forecast"]["forecastday"][0]["day"]
+            
+            # change f to c if you want celsius
+            week_weather.append({
+                "max_temp_f": day["maxtemp_f"],
+                "min_temp_f": day["mintemp_f"],
+                "avg_temp_f": day["avgtemp_f"],
+                "total_precip_mm": day["totalprecip_mm"],
+                "avg_humidity": day["avghumidity"],
+                "text": day["condition"]["text"]
+            })
+
+        else:
+            print(f"Error: {response.status_code} - {response.text}")
+            return [] 
+    
+    for i, day in enumerate(week_weather):
+        print(f"DAY {i}: ", day)
+        print("\n")
     
     return week_weather
 
@@ -123,6 +153,50 @@ def calculate_evapotransporation(precipitation, avg_temp, max_temp, min_temp, av
     AET = adjusted_pet - precipitation + irrigation_mm
 
     return AET
+
+def future_calculate_evapotransporation(avg_temp, month, week_number):
+    months_to_value = {
+        "01":  0.3,
+        "02": .32,
+        "03": .38,
+        "04": .46,
+        "05": .5,
+        "06": .53,
+        "07": .52,
+        "08": .48,
+        "09": .43,
+        "10": .38,
+        "11": .33,
+        "12": .29
+    }
+
+    PET = months_to_value[month] * (.46 * avg_temp + 8)
+    print("FUTURE PET: ", PET)
+
+    ka_values = {
+        "01": .4,
+        "02": .4,
+        "03": .5,
+        '04': .5,
+        "05": .7,
+        "06": .7,
+        "07": .9, 
+        "08": .9,
+        "09": 1.1,
+        "10": 1.1,
+        "11": 1.2,
+        "12": 1.2,
+        "13": 1.1,
+        "14": 1.1,
+        "15": 1,
+        "16": 1,
+        "17": .8,
+        "18": .8,
+        "19": .7,
+        "20": .7
+    }
+
+    return PET * ka_values[week_number]
 
 def water_needed_for_crop (AET, effective_rainfall):
     # Irrigation water needed
@@ -206,10 +280,9 @@ def calculate_energy_saved(converted_given_gallons, converted_optimized_gallons,
         "plot_optimized_energy": round(optimized_energy, 2)
     }
 
-
-@app.route('/get/plot/info', methods=["POST"])
+@app.route('/future/plot/info', methods=["POST"])
 @csrf.exempt
-def testing():
+def future_plot_info():
     return jsonify({
     "energy_info": {
         "converted_optimized_energy": 1191.31,
@@ -228,10 +301,6 @@ def testing():
     },
     "optimal_irrigation": 23.114,
     "status": 200,
-    "avg_temp": round(1.124, 2),
-    "max_temp": round(1.124, 2),
-    "min_temp": round(1.124, 2),
-    "avg_humidity": round(1.124, 2),
     "weather_data": [
         {
             "avg_humidity": 27,
@@ -291,9 +360,124 @@ def testing():
         }
     ]
     })
+    farm_id = request.form.get("farm_id")
+    email = request.form.get("email")
+
+    date = datetime.today()
+    diff_dic = {
+        0: "00",
+        1: "01",
+        2: "02",
+        3: "03",
+        4: "04",
+        5: "05",
+        6: "06",
+        7: "07",
+        8: "08",
+        9: "09",
+        10: "10",
+        11: "11",
+        12: "12",
+        13: "13",
+        14: "14",
+        15: "15",
+        16: "16",
+        17: "17",
+        18: "18",
+        19: "19",
+        20: "20",
+    }
+    string_week = diff_dic[20]
+    date_string = date.strftime("%Y-%m-%d")
+    print("DATE STRING: ", date_string)
+    print(type(date_string))
+    week_weather = get_future_weather("Colby,KS")
+    print("WEEK WEATHER: ", week_weather)
+    avg_temp = 0
+    min_temp = 0
+    max_temp = 0
+    precipitation = 0
+    avg_humidity = 0
+    num_days = len(week_weather)
+
+    for i in range(num_days):
+        avg_temp += week_weather[i]["avg_temp_f"]
+        min_temp += week_weather[i]["min_temp_f"]
+        max_temp += week_weather[i]["max_temp_f"]
+        avg_humidity += week_weather[i]["avg_humidity"]
+        precipitation += week_weather[i]["total_precip_mm"]
+    
+    # Calculate averages only if there are days
+    if num_days > 0:
+        avg_temp /= num_days
+        min_temp /= num_days
+        max_temp /= num_days
+        avg_humidity /= num_days
+
+    print("FUTURE AVG TEMP: ", avg_temp)
+
+    effective_rainfall = calculate_effective_rainfall(precipitation)
+    print("FUTURE EFFECTIVE RAINFALL: ", effective_rainfall)
+
+    if farm_id:
+        # Format the month as a two-digit string
+        current_month = date.strftime("%m")
+        future_evapotransporation = future_calculate_evapotransporation(avg_temp, current_month, string_week)
+        print("FUTURE EVAPO: ", future_evapotransporation)
+
+        future_optimal_irrigation_inches = water_needed_for_crop(future_evapotransporation, effective_rainfall)
+        future_optimal_irrigation_inches = round(future_optimal_irrigation_inches, 2)
+        future_optimal_irrigation_mm = future_optimal_irrigation_inches * 25.4
+        print("FUTURE OPTIMAL IRRIGATION IN MM: ", future_optimal_irrigation_mm)
+        print("FUTURE OPTIMAL IRRIGATION INCHES: ", future_optimal_irrigation_inches)
+
+        # money_info = calculate_money_saved(optimal_irrigation_mm, irrigation_mm)
+        # energy_info = calculate_energy_saved(money_info["converted_irrigation_given_gallons"], money_info["converted_irrigation_optimized_gallons"], money_info["plot_irrigation_given_gallons"], money_info["plot_irrigation_optimized_gallons"])
+
+        money_info = {
+                "converted_irrigation_given_gallons": 882453.03,
+                "converted_irrigation_optimized_gallons": 803032.26,
+                "converted_money_saved": 150899.47,
+                "plot_cost_optimized": 1938.8904955244946,
+                "plot_cost_given": 2130.6488961807627,
+                "plot_irrigation_given_gallons": 1121.39,
+                "plot_irrigation_optimized_gallons": 1020.47,
+                "plot_money_saved": 191.76
+            }
+        energy_info = {
+                "converted_optimized_energy": 1191.31,
+                "plot_optimized_energy": 1.51
+            }
+        thread = Thread(target=create_pdf, args=(email, future_optimal_irrigation_inches, farm_id, money_info, energy_info, week_weather))
+        thread.start()
+
+        return jsonify({
+            "status": 200,
+            "optimal_irrigation": max(future_optimal_irrigation_inches, 0),
+            "given_irrigation": 0,
+            "energy_info": energy_info,
+            "money_info": money_info,
+            "weather_data": week_weather,
+            "avg_temp": round(avg_temp, 2),
+            "max_temp": round(max_temp, 2),
+            "min_temp": round(min_temp, 2),
+            "avg_humidity": round(avg_humidity, 2)
+        })
+
+@app.route('/get/plot/info', methods=["POST"])
+@csrf.exempt
+def testing():
+    farm_id = request.form.get("farm_id")
+    email = request.form.get("email")
+    date = request.form.get("date")
+    index = int(request.form.get("index"))
     try:
         print("IN TESTING")
-        week_weather = get_weather("2024-09-10", "Colby,KS")
+        # date: format => yyyy-MM-dd format (i.e. dt=2010-01-01)
+        date_string = date.strftime("%Y-%m-%d")
+        print("DATE STRING: ", date_string)
+        return
+        week_weather = get_weather(date_string, "Colby,KS")
         avg_temp = 0
         min_temp = 0
         max_temp = 0
@@ -315,17 +499,16 @@ def testing():
             max_temp /= num_days
             avg_humidity /= num_days
 
+        print("AVG TEMP: ", avg_temp)
+
         effective_rainfall = calculate_effective_rainfall(precipitation)
         print("EFFECTIVE RAINFALL: ", effective_rainfall)
-
-        week_number = 12
-        farm_id = request.form.get("farm_id")
         
         print("FARM ID: ", farm_id)
         if farm_id:
             # Handle irrigation retrieval safely
-            if week_number < len(dic[farm_id]["irrigation"]["irrigation_inches"]):
-                irrigation_inches = dic[farm_id]["irrigation"]["irrigation_inches"][week_number]
+            if index < len(dic[farm_id]["irrigation"]["irrigation_inches"]):
+                irrigation_inches = dic[farm_id]["irrigation"]["irrigation_inches"][index]
             else:
                 irrigation_inches = 0
 
@@ -340,19 +523,18 @@ def testing():
             optimal_irrigation_inches = water_needed_for_crop(evapotransporation, effective_rainfall)
             optimal_irrigation_inches = round(optimal_irrigation_inches, 2)
             optimal_irrigation_mm = optimal_irrigation_inches * 25.4
-            print("OPTIMAL IRRIGATION IN INCHES: ", optimal_irrigation_mm)
+            print("OPTIMAL IRRIGATION IN MM: ", optimal_irrigation_mm)
+            print("OPTIMAL IRRIGATION IN INCHES: ", optimal_irrigation_inches)
 
             money_info = calculate_money_saved(optimal_irrigation_mm, irrigation_mm)
             energy_info = calculate_energy_saved(money_info["converted_irrigation_given_gallons"], money_info["converted_irrigation_optimized_gallons"], money_info["plot_irrigation_given_gallons"], money_info["plot_irrigation_optimized_gallons"])
-
-            email = request.form.get("email")
 
             thread = Thread(target=create_pdf, args=(email, optimal_irrigation_inches, farm_id, money_info, energy_info, week_weather))
             thread.start()
 
             return jsonify({
                 "status": 200,
-                "optimal_irrigation": optimal_irrigation_inches,
+                "optimal_irrigation": max(optimal_irrigation_inches, 0),
                 "given_irrigation": irrigation_inches,
                 "money_info": money_info,
                 "energy_info": energy_info,
